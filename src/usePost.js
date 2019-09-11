@@ -2,24 +2,24 @@ import { useReducer } from 'react'
 import axios from 'axios'
 
 const reducer = (state, action) => {
-    //console.log('state', state, 'action', action)
-    if(action.type === 'REQUEST') {
-      return {
-        ...state,
-        loading: true
-      }
+  //console.log('state', state, 'action', action)
+  if(action.type === 'REQUEST') {
+    return {
+      ...state,
+      loading: true
     }
-  
-    if(action.type === 'SUCCESS') {
-      return {
-        ...state,
-        loading: false,
-        data: action.data
-      }
-    }
-  
-    return state
   }
+
+  if(action.type === 'SUCCESS') {
+    return {
+      ...state,
+      loading: false,
+      data: action.data
+    }
+  }
+
+  return state
+}
 
 const usePost = (url) => {
     const [data, dispatch] = useReducer(reducer, {
