@@ -31,9 +31,7 @@ const reducer = (state, action) => {
   const init = baseURL => {
 
     const useGet = resource => {
-        const [data, dispatch] = useReducer(reducer, {
-            INITIAL_STATE
-        })
+        const [data, dispatch] = useReducer(reducer, INITIAL_STATE)
         
         useEffect(() => {
           dispatch({ type: 'REQUEST' })

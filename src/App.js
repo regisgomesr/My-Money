@@ -70,9 +70,9 @@ function App() {
                       <tr key={mes}>
                         <td>{mes}</td>
                         <td>{data.data[mes].previsao_entrada}</td>
-                        <td>{data.data[mes].entrada}</td>
+                        <td>{data.data[mes].entradas}</td>
                         <td>{data.data[mes].previsao_saida}</td>
-                        <td>{data.data[mes].saida}</td>
+                        <td>{data.data[mes].saidas}</td>
                       </tr>
                     )
                   })
@@ -83,7 +83,6 @@ function App() {
           )
         }
 
-        <pre>{JSON.stringify(data)}</pre>
 
       </div>
 
