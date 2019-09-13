@@ -1,5 +1,6 @@
 import React from 'react'
-import Rest from './rest'
+import { Link } from 'react-router-dom'
+import Rest from '../../utils/rest'
 
 const baseURL = 'https://mymoney-regis.firebaseio.com/'
 
@@ -17,7 +18,7 @@ if(data.loading){
   if(Object.keys(data.data).length > 0){
     return(
 
-      <table clasName='table'>
+      <table className='table'>
         
         <thead>
           <tr>
@@ -35,7 +36,7 @@ if(data.loading){
             .map(mes => {
               return (
                 <tr key={mes}>
-                  <td>{mes}</td>
+                  <td><Link to={`/movimentacoes/${mes}`}>{mes}</Link></td>
                   <td>{data.data[mes].previsao_entrada}</td>
                   <td>{data.data[mes].entradas}</td>
                   <td>{data.data[mes].previsao_saida}</td>
