@@ -32,16 +32,21 @@ const reducer = (state, action) => {
 
     const useGet = resource => {
         const [data, dispatch] = useReducer(reducer, INITIAL_STATE)
+
+        const carregar = async() => {
+          dispatch({ type: 'REQUEST' })
+          const res = await axios.get(baseURL + resource + '.json')
+          dispatch({ type: 'SUCCESS', data: res.data })
+        }
         
         useEffect(() => {
-          dispatch({ type: 'REQUEST' })
-          axios
-          .get(baseURL + resource + '.json')
-          .then(res => {
-           dispatch({ type: 'SUCCESS', data: res.data })
-          })
+          carregar()
         }, [resource])
-        return data
+        return {
+          // criando um objeto novo com tudo que tem em data
+          ...data,
+          refetch: carregar
+        }
       }
 
       const usePost = resource => {
@@ -49,16 +54,14 @@ const reducer = (state, action) => {
             INITIAL_STATE
           })
     
-        const post = data => {
+        const post = async(data) => {
             dispatch({ type: 'REQUEST' })
-            axios
-            .post(baseURL + resource + '.json', data)
-            .then(res => {
+            const res = await axios.post(baseURL + resource + '.json', data)
               dispatch({
                   type: 'SUCCESS',
                   data: res.data
               })  
-            })
+          
           }
           return [data, post]
     }
