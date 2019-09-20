@@ -3,12 +3,13 @@ import React, { useState } from 'react'
 import Rest from '../utils/rest'
 
 const baseURL = 'https://mymoney-regis.firebaseio.com/'
-const { useGet, usePost } = Rest(baseURL)
+const { useGet, usePost, useDelete } = Rest(baseURL)
 
 const Movimentacoes = ({ match }) => {
 
     const data = useGet(`movimentacoes/${match.params.data}`)
     const [postData, salvar] = usePost(`movimentacoes/${match.params.data}`)
+    const [removeData, remover] = useDelete('')
 
     const [descricao, setDescricao] = useState('')
     const [valor, setValor] = useState(0.0)
@@ -31,6 +32,11 @@ const Movimentacoes = ({ match }) => {
         data.refetch()
     }
 
+    const removerMovimentacao = async(id) => {
+        await remover(`movimentacoes/${match.params.data}/${id}`)
+        data.refetch()
+    }
+
    return (
       <div className='container'>
         <h1>Movimentações</h1>
@@ -50,6 +56,10 @@ const Movimentacoes = ({ match }) => {
                             <tr>
                                 <td>{data.data[movimentacao].descricao}</td>
                                 <td>{data.data[movimentacao].valor}</td>
+                                <td>
+                                    <button onClick={() => removerMovimentacao(movimentacao)} 
+                                    className="btn btn-danger">Remover</button>
+                                </td>
                             </tr>
                         )
                     })
@@ -57,10 +67,8 @@ const Movimentacoes = ({ match }) => {
 
                 <tr>
                     <td><input type='text' value={descricao} onChange={onChangeDescricao} /></td>
-                    <td>
-                        <input type='text' value={valor} onChange={onChangeValor} />
-                        <button onClick={salvarMovimentacao}>+</button>
-                    </td> 
+                    <td><input type='text' value={valor} onChange={onChangeValor} /></td>
+                    <td><button onClick={salvarMovimentacao} className="btn btn-primary">Adicionar</button></td> 
                 </tr>
 
             </tbody>

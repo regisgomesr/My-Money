@@ -71,15 +71,13 @@ const reducer = (state, action) => {
             INITIAL_STATE
           })
     
-        const remove = resource => {
+        const remove = async(resource) => {
             dispatch({ type: 'REQUEST' })
-            axios
-            .delete(baseURL+resource+'.json')
-            .then(() => {
-              dispatch({
-                  type: 'SUCCESS'
-              })  
-            })
+            await axios.delete(baseURL+resource+'.json')
+            dispatch({
+                type: 'SUCCESS'
+            })  
+            
           }
           return [data, remove]
     }
