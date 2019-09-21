@@ -12,24 +12,26 @@ const Movimentacoes = ({ match }) => {
     const [removeData, remover] = useDelete('')
 
     const [descricao, setDescricao] = useState('')
-    const [valor, setValor] = useState(0.0)
+    const [valor, setValor] = useState('')
 
     const onChangeDescricao = evt => {
         setDescricao(evt.target.value)
     }
 
     const onChangeValor = evt => {
-        setValor(parseFloat(evt.target.value))
+        setValor(evt.target.value)
     }
 
     const salvarMovimentacao = async() => {
-        await salvar({
-            descricao,
-            valor
-        })
-        setDescricao('')
-        setValor(0)
-        data.refetch()
+        
+        if(!isNaN(valor) && valor.search(/^[-]?\d+(\.)?\d+?$/) >= 0)
+            await salvar({
+                descricao,
+                valor: parseFloat(valor)
+            })
+            setDescricao('')
+            setValor(0)
+            data.refetch()
     }
 
     const removerMovimentacao = async(id) => {
@@ -53,10 +55,10 @@ const Movimentacoes = ({ match }) => {
                     .keys(data.data)
                     .map(movimentacao => {
                         return (
-                            <tr>
+                            <tr key={movimentacao}>
                                 <td>{data.data[movimentacao].descricao}</td>
                                 <td>{data.data[movimentacao].valor}</td>
-                                <td>
+                                <td className='text-right'>
                                     <button onClick={() => removerMovimentacao(movimentacao)} 
                                     className="btn btn-danger">Remover</button>
                                 </td>
@@ -68,7 +70,9 @@ const Movimentacoes = ({ match }) => {
                 <tr>
                     <td><input type='text' value={descricao} onChange={onChangeDescricao} /></td>
                     <td><input type='text' value={valor} onChange={onChangeValor} /></td>
-                    <td><button onClick={salvarMovimentacao} className="btn btn-primary">Adicionar</button></td> 
+                    <td className='text-right'>
+                        <button onClick={salvarMovimentacao} className="btn btn-primary">Adicionar</button>
+                    </td> 
                 </tr>
 
             </tbody>
