@@ -3,12 +3,14 @@ import React, { useState } from 'react'
 import Rest from '../utils/rest'
 
 const baseURL = 'https://mymoney-regis.firebaseio.com/'
-const { useGet, usePost, useDelete } = Rest(baseURL)
+const { useGet, usePost, useDelete, usePatch } = Rest(baseURL)
 
 const Movimentacoes = ({ match }) => {
 
     const data = useGet(`movimentacoes/${match.params.data}`)
     const dataMeses = useGet(`meses/${match.params.data}`)
+
+    const [dataPatch, patch] = usePatch()
 
     const [postData, salvar] = usePost(`movimentacoes/${match.params.data}`)
     const [removeData, remover] = useDelete('')
@@ -45,14 +47,22 @@ const Movimentacoes = ({ match }) => {
         data.refetch()
     }
 
+    const alterarPrevisaoEntrada = (evt) => {
+        patch(`meses/${match.params.data}`, { previsao_entrada: evt.target.value })
+    }
+
+    const alterarPrevisaoSaida = (evt) => {
+        patch(`meses/${match.params.data}`, { previsao_saida: evt.target.value })
+    }
+
    return (
       <div className='container'>
         <h1>Movimentações</h1>
         {
             !dataMeses.loading && <div>
-                Previsão Entrada: {dataMeses.data.previsao_entrada} / Previsão Saída: {dataMeses.data.previsao_saida} <br/>
+                Previsão Entrada: {dataMeses.data.previsao_entrada} <input type='text' onBlur={alterarPrevisaoEntrada} /> / Previsão Saída: {dataMeses.data.previsao_saida} <input type='text' onBlur={alterarPrevisaoSaida} /> <br/>
                 Entradas: {dataMeses.data.entradas} / Saídas: {dataMeses.data.saidas}
-                </div>
+            </div>
         }
         <table className='table'>
             <thead>
