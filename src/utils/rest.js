@@ -50,9 +50,7 @@ const reducer = (state, action) => {
       }
 
       const usePost = resource => {
-        const [data, dispatch] = useReducer(reducer, {
-            INITIAL_STATE
-          })
+        const [data, dispatch] = useReducer(reducer, INITIAL_STATE)
     
         const post = async(data) => {
             dispatch({ type: 'REQUEST' })
@@ -67,9 +65,7 @@ const reducer = (state, action) => {
     }
 
     const useDelete = () => {
-        const [data, dispatch] = useReducer(reducer, {
-            INITIAL_STATE
-          })
+        const [data, dispatch] = useReducer(reducer, INITIAL_STATE)
     
         const remove = async(resource) => {
             dispatch({ type: 'REQUEST' })
@@ -83,9 +79,7 @@ const reducer = (state, action) => {
     }
 
     const usePatch = () => {
-      const [data, dispatch] = useReducer(reducer, {
-          INITIAL_STATE
-        })
+      const [data, dispatch] = useReducer(reducer, INITIAL_STATE)
   
       const patch = async(resource, data) => {
           dispatch({ type: 'REQUEST' })
@@ -107,9 +101,7 @@ const reducer = (state, action) => {
   }
 
   export const usePost = resource => {
-    const [data, dispatch] = useReducer(reducer, {
-        INITIAL_STATE
-      })
+    const [data, dispatch] = useReducer(reducer, INITIAL_STATE)
 
     const post = async(data) => {
         dispatch({ type: 'REQUEST' })

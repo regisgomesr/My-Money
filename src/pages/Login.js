@@ -6,9 +6,8 @@ const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPasswo
 const Login = () => {
     
     const [postData, signin] = usePost(url)
-   
+
     useEffect(() => {
-        //if (Object.keys(postData.data) !== null || Object.keys(postData.data) !== undefined) // if(Object.keys(postData.data).length > 0)
         
         if(Object.keys(postData.data).length > 0) {
             localStorage.setItem('token', postData.data.idToken)
