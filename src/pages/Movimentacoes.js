@@ -7,14 +7,14 @@ const { useGet, usePost, useDelete, usePatch } = Rest(baseURL)
 
 const Movimentacoes = ({ match }) => {
 
-    const data = useGet(`movimentacoes/${match.params.data}`)
-    const dataMeses = useGet(`meses/${match.params.data}`)
+    const infoMes = useGet(`meses/${match.params.data}`)
+    const [dataPatch, alterarMes] = usePatch(`meses/${match.params.data}`)
 
-    const [dataPatch, patch] = usePatch()
+    const movimentacoes = useGet(`movimentacoes/${match.params.data}`)
+    const [postData, salvarNovaMovimentacao] = usePost(`movimentacoes/${match.params.data}`)
+    const [removeData, removerMovimentacao] = useDelete('')
 
-    const [postData, salvar] = usePost(`movimentacoes/${match.params.data}`)
-    const [removeData, remover] = useDelete('')
-
+    // gestao form
     const [descricao, setDescricao] = useState('')
     const [valor, setValor] = useState('')
 
@@ -30,32 +30,34 @@ const Movimentacoes = ({ match }) => {
     const salvarMovimentacao = async() => {
         
         if(!isNaN(valor) && valor.search(/^[-]?\d+(\.)?\d+?$/) >= 0)
-            await salvar({
+            await salvarNovaMovimentacao({
                 descricao,
                 valor: parseFloat(valor)
             })
             setDescricao('')
             setValor(0)
-            data.refetch()
-            await sleep(3000)
-            dataMeses.refetch()
+            movimentacoes.refetch()
+            await sleep(5000)
+            infoMes.refetch()
             
     }
 
-    const removerMovimentacao = async(id) => {
-        await remover(`movimentacoes/${match.params.data}/${id}`)
-        data.refetch()
+    const removerMovimentacaoClick = async(id) => {
+        await removerMovimentacao(`movimentacoes/${match.params.data}/${id}`)
+        movimentacoes.refetch()
+        await sleep(5000)
+        infoMes.refetch()
     }
 
     const alterarPrevisaoEntrada = (evt) => {
-        patch(`meses/${match.params.data}`, { previsao_entrada: evt.target.value })
+        alterarMes({ previsao_entrada: evt.target.value })
     }
 
     const alterarPrevisaoSaida = (evt) => {
-        patch(`meses/${match.params.data}`, { previsao_saida: evt.target.value })
+        alterarMes({ previsao_saida: evt.target.value })
     }
 
-    if(data.error === 'Permission denied'){
+    if(movimentacoes.error === 'Permission denied'){
         return <Redirect to='/login' />
     }
 
@@ -63,9 +65,9 @@ const Movimentacoes = ({ match }) => {
       <div className='container'>
         <h1>Movimentações</h1>
         {
-            !dataMeses.loading && dataMeses.data && <div>
-                Previsão Entrada: {dataMeses.data.previsao_entrada} <input type='text' onBlur={alterarPrevisaoEntrada} /> / Previsão Saída: {dataMeses.data.previsao_saida} <input type='text' onBlur={alterarPrevisaoSaida} /> <br/>
-                Entradas: {dataMeses.data.entradas} / Saídas: {dataMeses.data.saidas}
+            !infoMes.loading && infoMes.data && <div>
+                Previsão Entrada: {infoMes.data.previsao_entrada} <input type='text' onBlur={alterarPrevisaoEntrada} /> / Previsão Saída: {infoMes.data.previsao_saida} <input type='text' onBlur={alterarPrevisaoSaida} /> <br/>
+                Entradas: {infoMes.data.entradas} / Saídas: {infoMes.data.saidas}
             </div>
         }
         <table className='table'>
@@ -76,16 +78,16 @@ const Movimentacoes = ({ match }) => {
                 </tr>
             </thead>
             <tbody>
-                { data.data &&
+                { movimentacoes.data &&
                     Object
-                    .keys(data.data)
+                    .keys(movimentacoes.data)
                     .map(movimentacao => {
                         return (
                             <tr key={movimentacao}>
-                                <td>{data.data[movimentacao].descricao}</td>
-                                <td>{data.data[movimentacao].valor}</td>
+                                <td>{movimentacoes.data[movimentacao].descricao}</td>
+                                <td>{movimentacoes.data[movimentacao].valor}</td>
                                 <td className='text-right'>
-                                    <button onClick={() => removerMovimentacao(movimentacao)} 
+                                    <button onClick={() => removerMovimentacaoClick(movimentacao)} 
                                     className="btn btn-danger">Remover</button>
                                 </td>
                             </tr>
