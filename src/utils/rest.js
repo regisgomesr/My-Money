@@ -1,6 +1,6 @@
 import { useReducer, useEffect } from 'react'
 import axios from 'axios'
-
+axios.defaults.validateStatus = code => code < 500
 
 const INITIAL_STATE = {
     loading: false,
@@ -29,7 +29,8 @@ const reducer = (state, action) => {
       return {
         ...state,
         loading: false,
-        error: action.error
+        error: action.error,
+        code: action.code
       }
     }
 
@@ -47,9 +48,14 @@ const reducer = (state, action) => {
           try{
             dispatch({ type: 'REQUEST' })
             const res = await axios.get(baseURL + resource + '.json')
-            dispatch({ type: 'SUCCESS', data: res.data })
+            if(res.data.error && Object.keys(res.data.error).length > 0) {
+                dispatch({ type: 'FAILURE', error: res.data.error })
+            }else{
+              dispatch({ type: 'SUCCESS', data: res.data })
+            }
+            
           }catch(err) {
-            dispatch({ type: 'FAILURE', error: 'Error loading data' })
+            dispatch({ type: 'FAILURE', error: 'unknown error' })
           }
         }
         
@@ -120,15 +126,22 @@ const reducer = (state, action) => {
         dispatch({ type: 'REQUEST' })
         try{
           const res = await axios.post(resource, data)
+          if(res.data.error && Object.keys(res.data.error).length > 0) {
+            dispatch({
+              type: 'FAILURE',
+              error: res.data.error.message
+            })
+          }else {
             dispatch({
                 type: 'SUCCESS',
                 data: res.data
             })
             return res.data
+          }
         }catch(err) {
           dispatch({
             type: 'FAILURE',
-            error: 'signin error'
+            error: 'unknow error'
         })
         }  
       
