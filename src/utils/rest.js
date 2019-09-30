@@ -81,7 +81,7 @@ const reducer = (state, action) => {
     
         const post = async(data) => {
             dispatch({ type: 'REQUEST' })
-            const res = await axios.post(baseURL + resource + '.json', data)
+            const res = await axios.post(baseURL + resource + '.json' + getAuth(), data)
               dispatch({
                   type: 'SUCCESS',
                   data: res.data
@@ -96,7 +96,7 @@ const reducer = (state, action) => {
     
         const remove = async(resource) => {
             dispatch({ type: 'REQUEST' })
-            await axios.delete(baseURL+resource+'.json')
+            await axios.delete(baseURL+resource+'.json' + getAuth())
             dispatch({
                 type: 'SUCCESS'
             })  
@@ -110,7 +110,7 @@ const reducer = (state, action) => {
   
       const patch = async(data) => {
           dispatch({ type: 'REQUEST' })
-          await axios.patch(baseURL+resource+'.json', data)
+          await axios.patch(baseURL+resource+'.json' + getAuth(), data)
           dispatch({
               type: 'SUCCESS'
           })  
