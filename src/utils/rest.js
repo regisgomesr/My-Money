@@ -37,6 +37,13 @@ const reducer = (state, action) => {
     return state
   }
 
+  const getAuth = () => {
+    const token = localStorage.getItem('token')
+    if(token){
+      return '?auth='+token
+    }
+    return ''
+  }
 
   const init = baseURL => {
 
@@ -47,7 +54,7 @@ const reducer = (state, action) => {
 
           try{
             dispatch({ type: 'REQUEST' })
-            const res = await axios.get(baseURL + resource + '.json')
+            const res = await axios.get(baseURL + resource + '.json' + getAuth())
             if(res.data.error && Object.keys(res.data.error).length > 0) {
                 dispatch({ type: 'FAILURE', error: res.data.error })
             }else{
