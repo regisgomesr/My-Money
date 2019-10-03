@@ -8,6 +8,8 @@ const Login = () => {
     
     const [postData, signin] = usePost(url)
     const [logado, setLogado] = useState(false)
+    const [email, setEmail] = useState('')
+    const [senha, setSenha] = useState('')
 
     useEffect(() => {
         
@@ -26,10 +28,18 @@ const Login = () => {
 
     const login = async() => {
         await signin({
-            email: 'regisgomesr@gmail.com',
-	        password: 'abc123',
+            email,
+	        password: senha,
 	        returnSecureToken: true
         })
+    }
+
+    const onChangeEmail = evt => {
+        setEmail(evt.target.value)
+    }
+
+    const onChangeSenha = evt => {
+        setSenha(evt.target.value)
     }
 
     if(logado) {
@@ -39,7 +49,12 @@ const Login = () => {
     return (
         <div>
             <h1>Login</h1>
-            {JSON.stringify(postData)}
+            {
+                postData.error && postData.error.length > 0 &&
+                <p>Email e/ou senha inválidos!</p>
+            }
+            <input type='text' value={email} onChange={onChangeEmail} placeholder='Digite seu E-mail' />
+            <input type='password' value={senha} onChange={onChangeSenha} placeholder='Digite sua senha' />
             <button onClick={login}>Login</button>
         </div>
     )
